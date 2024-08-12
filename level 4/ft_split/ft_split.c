@@ -2,71 +2,73 @@
 
 int is_space(char c)
 {
-    if(c == ' ' || c == '\t')
-        return(1);
-    return(0);
+    if(c == ' ' || c == '\t' || c == '\n')
+        return (1);
+    return (0);
 }
 
 int count_word(char *str)
 {
-    int count = 0;
-    int i = 0;
+    int i;
+    int count;
 
-    while(str[i] && is_space(str[i]))
+    i = 0;
+    count = 0;
+    while(is_space(str[i]))
         i++;
     while(str[i])
     {
-        if(!is_space(str[i]) && (is_space(str[i + 1]) || str[i + 1] == '\0'))
+        if(!is_space(str[i]) && is_space(str[i + 1]))
             count++;
         i++;
     }
-    return(count);
+    return (count);
 }
 
-char *fill_word(char *str)
+char *word_alloc(char *str)
 {
-    int i = 0;
-    char *res;
+    int i;
+    char *word;
 
+    i = 0;
     while(str[i] && !is_space(str[i]))
         i++;
-    res = malloc((i + 1) * sizeof(char));
-    if(!res)
-        return(NULL);
+    word = (char *) malloc((i + 1) * sizeof(char));
     i = 0;
-    while(str[i])
+    while(str[i] && !is_space(str[i]))
     {
-        res[i] = str[i];
+        word[i] = str[i];
         i++;
     }
-    res[i] = '\0';
-    return(res);
+    word[i] = '\0';
+    return (word);
+    
 }
 
-char **ft_split(char *str)
+char    **ft_split(char *str)
 {
+    int i;
     char **res;
-    int i = 0;
-    int c_w = 0;
+    int len;
 
-    c_w = count_word(str);
-    res = malloc((c_w + 1) * sizeof(char *));
+    i = 0;
+    len = count_word(str);
+    res = (char **) malloc ((len + 1) *sizeof(char *));
     if(!res)
-        return(NULL);
+        return (NULL);
     while(*str)
     {
         while(*str && is_space(*str))
             str++;
         if(*str && !is_space(*str))
         {
-            res[i] = fill_word(str);
+            res[i] = word_alloc(str);
             i++;
-            while(*str && is_space(*str))
-                str++;
             while(*str && !is_space(*str))
                 str++;
         }
+       
     }
-    res[i] = NULL;
-    return(res);
+     res[i] = 0;
+    return (res);
 }
